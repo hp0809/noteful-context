@@ -10,11 +10,25 @@ import AddNote from '../AddNote/AddNote'
 import ApiContext from '../ApiContext'
 import config from '../config'
 import './App.css'
+import ValidationError from '../ValidationError'
 
 class App extends Component {
     state = {
         notes: [],
-        folders: []
+        folders: [],
+        newNoteName: '',
+        newNoteContent: '',
+        newNoteFolder: '',
+        folderName:'',
+        newNoteNameValid: false,
+        newNoteContentValid: false,
+        newNoteFolderValid: false,
+        folderNameValid: false,
+        validationMessages: {
+          noteName: '',
+          noteContent: '',
+          folderName: ''
+        }
     };
 
     componentDidMount() {
@@ -63,6 +77,107 @@ class App extends Component {
           this.setState({
             notes: this.state.notes.filter(note => note.id !== noteId)
           })
+        }
+
+        updateFolder(folderName) {
+          this.setState({folderName}, () => {this.validateFolderName(folderName)});
+        }
+
+        updateNoteName(newNoteName) {
+          this.setState({newNoteName}, () => {this.validateNewNoteName(newNoteName)});
+        }
+
+        updateNoteContent(newNoteContent) {
+          this.setState({newNoteContent}, () => {this.validateNewNoteName(newNoteContent)});
+        }
+
+        validateFolderName(fieldValue) {
+          const fieldErrors = {...this.state.validationMessages};
+          let hasError = false;
+      
+          fieldValue = fieldValue.trim();
+          if(fieldValue.length === 0) {
+            fieldErrors.folderName = 'Name is required';
+            hasError = true;
+          } else {
+            if (fieldValue.length < 3) {
+              fieldErrors.folderName = 'Name must be at least 3 characters long';
+              hasError = true;
+            } else {
+              fieldErrors.folderName = '';
+              hasError = false;
+            }
+          }
+      
+          this.setState({
+            validationMessages: fieldErrors,
+            folderNameValid: !hasError
+          }, this.folderFormValid );
+      
+        }
+      
+        validateNewNoteName(fieldValue) {
+          const fieldErrors = {...this.state.validationMessages};
+          let hasError = false;
+      
+          fieldValue = fieldValue.trim();
+          if(fieldValue.length === 0) {
+            fieldErrors.noteName = 'Name is required';
+            hasError = true;
+          } else {
+            if (fieldValue.length < 3) {
+              fieldErrors.noteName = 'Name must be at least 3 characters long';
+              hasError = true;
+            } else {
+               fieldErrors.noteName = '';
+               hasError = false;
+              }
+            }
+          
+      
+          this.setState({
+            validationMessages: fieldErrors,
+            newNoteNameValid: !hasError
+          }, this.noteFormValid );
+      
+        }
+      
+        validateNewNoteContent(fieldValue) {
+          const fieldErrors = {...this.state.validationMessages};
+          let hasError = false;
+      
+          fieldValue = fieldValue.trim();
+          if(fieldValue.length === 0) {
+            fieldErrors.noteContent = 'Content is required';
+            hasError = true;
+          } else {
+            if (fieldValue.length < 3) {
+              fieldErrors.noteContent = 'Content must be at least 3 characters long';
+              hasError = true;
+            } else {
+               fieldErrors.password = '';
+               hasError = false;
+              }
+            }
+          
+      
+          this.setState({
+            validationMessages: fieldErrors,
+            passwordValid: !hasError
+          }, this.noteFormValid );
+      
+        }
+      
+        noteFormValid() {
+          this.setState({
+            formValid: this.state.newNoteNameValid && this.state.newNoteContentValid 
+          });
+        }
+
+        folderFormValid() {
+          this.setState({
+            formValid: this.state.folderNameValid
+          });
         }
       
         renderNavRoutes() {

@@ -3,6 +3,7 @@ import NotefulForm from '../NotefulForm/NotefulForm'
 import ApiContext from '../ApiContext'
 import config from '../config'
 import './AddFolder.css'
+import ValidationError from '../ValidationError'
 
 export default class AddFolder extends Component {
   static defaultProps = {
@@ -47,10 +48,11 @@ export default class AddFolder extends Component {
             <label htmlFor='folder-name-input'>
               Name
             </label>
-            <input type='text' id='folder-name-input' name='folder-name' />
+            <input type='text' id='folder-name-input' name='folder-name' onChange={e => this.props.updateFolder} />
+            <ValidationError hasError={!this.props.folderNameValid} />
           </div>
           <div className='buttons'>
-            <button type='submit'>
+            <button type='submit' disabled={!this.props.folderFormValid}>
               Add folder
             </button>
           </div>
