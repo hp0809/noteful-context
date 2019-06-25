@@ -13,6 +13,92 @@ export default class AddNote extends Component {
   }
   static contextType = ApiContext;
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      newNoteName: '',
+      newNoteContent: '',
+      noteFolder: '',
+      newNoteNameValid: false,
+      newNoteContentValid: false,
+      noteFolderValid: false,
+      formValid: false,
+      validationMessages: {
+        newNoteName: '',
+        newNoteContent: '',
+        noteFolder: ''
+      }
+    }
+  }
+
+  updateNoteName(newNoteName) {
+    console.log('updateNoteName ran')
+    this.setState({newNoteName}, () => {this.validateNewNoteName(newNoteName)});
+  }
+
+  updateNoteContent(newNoteContent) {
+    this.setState({newNoteContent}, () => {this.validateNewNoteName(newNoteContent)});
+  }
+
+  validateNewNoteName(fieldValue) {
+    console.log('validateFolderName ran')
+    const fieldErrors = {...this.state.validationMessages};
+    let hasError = false;
+
+    fieldValue = fieldValue.trim();
+    if(fieldValue.length === 0) {
+      fieldErrors.newNoteName = 'Name is required';
+      hasError = true;
+    } else {
+      if (fieldValue.length < 3) {
+        fieldErrors.newNoteName = 'Name must be at least 3 characters long';
+        hasError = true;
+      } else {
+         fieldErrors.newNoteName = '';
+         hasError = false;
+        }
+      }
+    
+
+    this.setState({
+      validationMessages: fieldErrors,
+      newNoteNameValid: !hasError
+    }, this.noteFormValid );
+
+  }
+
+  validateNewNoteContent(fieldValue) {
+    const fieldErrors = {...this.state.validationMessages};
+    let hasError = false;
+
+    fieldValue = fieldValue.trim();
+    if(fieldValue.length === 0) {
+      fieldErrors.newNoteContent = 'Content is required';
+      hasError = true;
+    } else {
+      if (fieldValue.length < 3) {
+        fieldErrors.newNoteContent = 'Content must be at least 3 characters long';
+        hasError = true;
+      } else {
+         fieldErrors.newNoteContent = '';
+         hasError = false;
+        }
+      }
+    
+
+    this.setState({
+      validationMessages: fieldErrors,
+      passwordValid: !hasError
+    }, this.noteFormValid );
+
+  }
+
+  noteFormValid() {
+    this.setState({
+      formValid: this.state.newNoteNameValid && this.state.newNoteContentValid 
+    });
+  }
+
   handleSubmit = e => {
     e.preventDefault()
     const newNote = {
@@ -52,23 +138,23 @@ export default class AddNote extends Component {
             <label htmlFor='note-name-input'>
               Name
             </label>
-            <input type='text' id='note-name-input' name='note-name' onChange={e => this.props.updateNoteName}/>
-            <ValidationError hasError={!this.props.newNoteNameValid} />
+            <input type='text' id='note-name-input' name='note-name' onChange={e => this.updateNoteName(e.target.value)}/>
+            <ValidationError hasError={!this.props.newNoteNameValid} message={this.state.validationMessages.newNoteName} />
           </div>
           <div className='field'>
             <label htmlFor='note-content-input'>
               Content
             </label>
-            <textarea id='note-content-input' name='note-content' onChange={e => this.props.updateNoteContent} />
-            <ValidationError hasError={!this.props.newNoteContentValid} />
+            <textarea id='note-content-input' name='note-content' onChange={e => this.updateNoteContent(e.target.value)} />
+            <ValidationError hasError={!this.props.newNoteContentValid} message={this.state.validationMessages.newNoteContent}/>
           </div>
           <div className='field'>
             <label htmlFor='note-folder-select'>
               Folder
             </label>
             <select id='note-folder-select' name='note-folder-id' >
-            <ValidationError hasError={!this.props.newNoteFolderValid} />  
-              <option value={null}>...</option>
+            
+              <option value={null} required>...</option>
               {folders.map(folder =>
                 <option key={folder.id} value={folder.id}>
                   {folder.name}
@@ -77,7 +163,7 @@ export default class AddNote extends Component {
             </select>
           </div>
           <div className='buttons'>
-            <button type='submit'>
+            <button type='submit' disabled={!this.state.noteFormValid}>
               Add note
             </button>
           </div>
