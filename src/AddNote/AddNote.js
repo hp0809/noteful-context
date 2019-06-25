@@ -3,6 +3,7 @@ import NotefulForm from '../NotefulForm/NotefulForm'
 import ApiContext from '../ApiContext'
 import config from '../config'
 import './AddNote.css'
+import ValidationError from '../ValidationError'
 
 export default class AddNote extends Component {
   static defaultProps = {
@@ -11,6 +12,127 @@ export default class AddNote extends Component {
     },
   }
   static contextType = ApiContext;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      newNoteName: '',
+      newNoteContent: '',
+      noteFolder: '',
+      newNoteNameValid: false,
+      newNoteContentValid: false,
+      noteFolderValid: false,
+      noteFormValid: false,
+      validationMessages: {
+        newNoteName: '',
+        newNoteContent: '',
+        noteFolder: ''
+      }
+    }
+  }
+
+  updateNoteName(newNoteName) {
+    this.setState({newNoteName}, () => {this.validateNewNoteName(newNoteName)});
+  }
+
+  updateNoteContent(newNoteContent) {
+    this.setState({newNoteContent}, () => {this.validateNewNoteContent(newNoteContent)});
+  }
+
+  updateNoteFolder (noteFolder) {
+    this.setState({noteFolder}, () => {this.validateNoteFolder(noteFolder)});
+  }
+
+  validateNewNoteName(fieldValue) {
+    
+    const fieldErrors = {...this.state.validationMessages};
+    let hasError = false;
+
+    fieldValue = fieldValue.trim();
+    if(fieldValue.length === 0) {
+      fieldErrors.newNoteName = 'Name is required';
+      hasError = true;
+    } else {
+      if (fieldValue.length < 3) {
+        fieldErrors.newNoteName = 'Name must be at least 3 characters long';
+        hasError = true;
+      } else {
+         fieldErrors.newNoteName = '';
+         hasError = false;
+        }
+      }
+    
+      
+    this.setState({
+      validationMessages: fieldErrors,
+      newNoteNameValid: !hasError
+    }, this.noteFormValid );
+
+  }
+
+  validateNewNoteContent(fieldValue) {
+    
+    const fieldErrors = {...this.state.validationMessages};
+    let hasError = false;
+
+    fieldValue = fieldValue.trim();
+    if(fieldValue.length === 0) {
+      fieldErrors.newNoteContent = 'Content is required';
+      hasError = true;
+    } else {
+      if (fieldValue.length < 3) {
+        fieldErrors.newNoteContent = 'Content must be at least 3 characters long';
+        hasError = true;
+      } else {
+         fieldErrors.newNoteContent = '';
+         hasError = false;
+        }
+      }
+    
+
+    this.setState({
+      validationMessages: fieldErrors,
+      newNoteContentValid: !hasError
+    }, this.noteFormValid );
+    
+    
+
+  }
+
+  validateNoteFolder(option) {
+    console.log('validateNoteFolder ran')
+    const fieldErrors = {...this.state.validationMessages};
+    let hasError = false;
+    
+    console.log(option)
+
+    if(option.length === 0) {
+      fieldErrors.noteFolder = 'Please select a folder';
+      hasError = true;
+    } else {
+      fieldErrors.noteFolder = '';
+      hasError = false;
+     }
+     console.log(hasError)
+
+    this.setState({
+      validationMessages: fieldErrors,
+      noteFolderValid: !hasError
+    }, this.noteFormValid );
+  
+
+  }
+
+  noteFormValid() {
+    this.setState({
+      noteFormValid: this.state.newNoteNameValid && this.state.newNoteContentValid && this.state.noteFolderValid
+    });
+    console.log(this.state.newNoteNameValid)
+    console.log(this.state.newNoteContentValid)
+    console.log(this.state.noteFolderValid)
+  }
+
+  
 
   handleSubmit = e => {
     e.preventDefault()
@@ -51,29 +173,33 @@ export default class AddNote extends Component {
             <label htmlFor='note-name-input'>
               Name
             </label>
-            <input type='text' id='note-name-input' name='note-name' />
+            <input type='text' id='note-name-input' name='note-name' onChange={e => this.updateNoteName(e.target.value)}/>
+            <ValidationError hasError={!this.props.newNoteNameValid} message={this.state.validationMessages.newNoteName} />
           </div>
           <div className='field'>
             <label htmlFor='note-content-input'>
               Content
             </label>
-            <textarea id='note-content-input' name='note-content' />
+            <textarea id='note-content-input' name='note-content' onChange={e => this.updateNoteContent(e.target.value)} />
+            <ValidationError hasError={!this.props.newNoteContentValid} message={this.state.validationMessages.newNoteContent}/>
           </div>
           <div className='field'>
             <label htmlFor='note-folder-select'>
               Folder
             </label>
-            <select id='note-folder-select' name='note-folder-id'>
-              <option value={null}>...</option>
+            <select id='note-folder-select' name='note-folder-id' required onChange={e => this.updateNoteFolder(e.target.value)}>
+            
+              <option value=''>...</option>
               {folders.map(folder =>
                 <option key={folder.id} value={folder.id}>
                   {folder.name}
                 </option>
               )}
             </select>
+            <ValidationError hasError={!this.props.noteFolderValid} message={this.state.validationMessages.noteFolder}/>
           </div>
           <div className='buttons'>
-            <button type='submit'>
+            <button type='submit' disabled={!this.state.noteFormValid}>
               Add note
             </button>
           </div>

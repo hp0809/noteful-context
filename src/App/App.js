@@ -14,8 +14,9 @@ import './App.css'
 class App extends Component {
     state = {
         notes: [],
-        folders: []
-    };
+        folders: [],
+    }
+  
 
     componentDidMount() {
         Promise.all([
@@ -63,7 +64,7 @@ class App extends Component {
           this.setState({
             notes: this.state.notes.filter(note => note.id !== noteId)
           })
-        }
+        }        
       
         renderNavRoutes() {
             return (
