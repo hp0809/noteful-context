@@ -100,11 +100,10 @@ export default class AddNote extends Component {
   }
 
   validateNoteFolder(option) {
-    console.log('validateNoteFolder ran')
     const fieldErrors = {...this.state.validationMessages};
     let hasError = false;
     
-    console.log(option)
+    
 
     if(option.length === 0) {
       fieldErrors.noteFolder = 'Please select a folder';
@@ -113,7 +112,7 @@ export default class AddNote extends Component {
       fieldErrors.noteFolder = '';
       hasError = false;
      }
-     console.log(hasError)
+  
 
     this.setState({
       validationMessages: fieldErrors,
@@ -127,9 +126,6 @@ export default class AddNote extends Component {
     this.setState({
       noteFormValid: this.state.newNoteNameValid && this.state.newNoteContentValid && this.state.noteFolderValid
     });
-    console.log(this.state.newNoteNameValid)
-    console.log(this.state.newNoteContentValid)
-    console.log(this.state.noteFolderValid)
   }
 
   
