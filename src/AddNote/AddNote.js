@@ -196,7 +196,7 @@ export default class AddNote extends Component {
                 </option>
               )}
             </select>
-            <ValidationError hasError={!this.props.noteFolderValid} message={this.state.validationMessages.noteFolder}/>
+            <ValidationError hasError={!this.state.noteFolderValid} message={this.state.validationMessages.noteFolder}/>
           </div>
           <div className='buttons'>
             <button type='submit' disabled={!this.state.noteFormValid}>
