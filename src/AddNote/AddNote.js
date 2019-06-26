@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
-import NotefulForm from '../NotefulForm/NotefulForm'
-import ApiContext from '../ApiContext'
-import config from '../config'
-import './AddNote.css'
-import ValidationError from '../ValidationError'
+import React, { Component } from 'react';
+import NotefulForm from '../NotefulForm/NotefulForm';
+import ApiContext from '../ApiContext';
+import config from '../config';
+import './AddNote.css';
+import ValidationError from '../ValidationError';
+
 
 export default class AddNote extends Component {
   static defaultProps = {
@@ -170,14 +171,14 @@ export default class AddNote extends Component {
               Name
             </label>
             <input type='text' id='note-name-input' name='note-name' onChange={e => this.updateNoteName(e.target.value)}/>
-            <ValidationError hasError={!this.props.newNoteNameValid} message={this.state.validationMessages.newNoteName} />
+            <ValidationError hasError={!this.state.newNoteNameValid} message={this.state.validationMessages.newNoteName} />
           </div>
           <div className='field'>
             <label htmlFor='note-content-input'>
               Content
             </label>
             <textarea id='note-content-input' name='note-content' onChange={e => this.updateNoteContent(e.target.value)} />
-            <ValidationError hasError={!this.props.newNoteContentValid} message={this.state.validationMessages.newNoteContent}/>
+            <ValidationError hasError={!this.state.newNoteContentValid} message={this.state.validationMessages.newNoteContent}/>
           </div>
           <div className='field'>
             <label htmlFor='note-folder-select'>
@@ -192,7 +193,7 @@ export default class AddNote extends Component {
                 </option>
               )}
             </select>
-            <ValidationError hasError={!this.props.noteFolderValid} message={this.state.validationMessages.noteFolder}/>
+            <ValidationError hasError={!this.state.noteFolderValid} message={this.state.validationMessages.noteFolder}/>
           </div>
           <div className='buttons'>
             <button type='submit' disabled={!this.state.noteFormValid}>
@@ -203,4 +204,5 @@ export default class AddNote extends Component {
       </section>
     )
   }
+  
 }
