@@ -5,6 +5,7 @@ import CircleButton from '../CircleButton/CircleButton'
 import ApiContext from '../ApiContext'
 import { countNotesForFolder } from '../notes-helpers'
 import './NoteListNav.css'
+import NavError from '../NavError';
 
 
 export default class NoteListNav extends React.Component {
@@ -16,6 +17,7 @@ export default class NoteListNav extends React.Component {
       <div className='NoteListNav'>
         <ul className='NoteListNav__list'>
           {folders.map(folder =>
+            <NavError >
             <li key={folder.id}>
               <NavLink
                 className='NoteListNav__folder-link'
@@ -27,6 +29,7 @@ export default class NoteListNav extends React.Component {
                 {folder.name}
               </NavLink>
             </li>
+            </NavError>
           )}
         </ul>
         <div className='NoteListNav__button-wrapper'>

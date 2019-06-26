@@ -1,15 +1,17 @@
-import React, { Component } from 'react'
-import { Route, Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import NoteListNav from '../NoteListNav/NoteListNav'
-import NotePageNav from '../NotePageNav/NotePageNav'
-import NoteListMain from '../NoteListMain/NoteListMain'
-import NotePageMain from '../NotePageMain/NotePageMain'
-import AddFolder from '../AddFolder/AddFolder'
-import AddNote from '../AddNote/AddNote'
-import ApiContext from '../ApiContext'
-import config from '../config'
-import './App.css'
+import React, { Component } from 'react';
+import { Route, Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import NoteListNav from '../NoteListNav/NoteListNav';
+import NotePageNav from '../NotePageNav/NotePageNav';
+import NoteListMain from '../NoteListMain/NoteListMain';
+import NotePageMain from '../NotePageMain/NotePageMain';
+import AddFolder from '../AddFolder/AddFolder';
+import AddNote from '../AddNote/AddNote';
+import ApiContext from '../ApiContext';
+import config from '../config';
+import './App.css';
+import PageError from '../PageError';
+import NavError from '../NavError';
 
 class App extends Component {
     state = {
@@ -130,9 +132,11 @@ class App extends Component {
             return(
               <ApiContext.Provider value={value}>
                 <div className='App'>
+                  <NavError>
                   <nav className='App__nav'>
                     {this.renderNavRoutes()}
                   </nav>
+                  </NavError>
                   <header className='App__header'>
                     <h1>
                       <Link to='/'>Noteful</Link>
@@ -140,9 +144,11 @@ class App extends Component {
                       <FontAwesomeIcon icon='check-double' />
                     </h1>
                   </header>
+                  <PageError >
                   <main className='App__main'>
                     {this.renderMainRoutes()}
                   </main>
+                  </PageError>
                 </div>
               </ApiContext.Provider>
             )

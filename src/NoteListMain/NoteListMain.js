@@ -6,6 +6,8 @@ import CircleButton from '../CircleButton/CircleButton'
 import ApiContext from '../ApiContext'
 import { getNotesForFolder } from '../notes-helpers'
 import './NoteListMain.css'
+import PageError from '../PageError';
+
 
 export default class NoteListMain extends React.Component {
   static defaultProps = {
@@ -22,6 +24,7 @@ export default class NoteListMain extends React.Component {
       <section className='NoteListMain'>
         <ul>
           {notesForFolder.map(note =>
+            <PageError>
             <li key={note.id}>
               <Note
                 id={note.id}
@@ -29,6 +32,7 @@ export default class NoteListMain extends React.Component {
                 modified={note.modified}
               />
             </li>
+            </PageError>
           )}
         </ul>
         <div className='NoteListMain__button-container'>
